@@ -6,11 +6,13 @@
 
 from OkSpotAPI import OKSpot
 from HuobiSpotAPI import HuobiSpot
+import Util
 
 
 class TradeHistory:
     def __init__(self, amount, create_at, canceled_at, order_id, place_price, field_amount, symbol, state, trade_type,
                  field_cash_amount, finished_at, exchange):
+        self.id = -1
         self.amount = amount
         self.create_at = create_at
         self.canceled_at = canceled_at

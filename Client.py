@@ -8,7 +8,7 @@ from HuobiSpotAPI import HuobiSpot
 ok_coin_api_key = ''
 ok_coin_secret_key = ''
 ok_coin_url_cn = 'www.okcoin.cn'
-ok_coin_url_en = 'www.okcoin.com'
+ok_coin_url_en = 'www.okex.com'
 
 huobi_api_key = ''
 huobi_secret_key = ''

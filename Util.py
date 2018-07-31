@@ -12,6 +12,9 @@ import http.client
 import hmac
 import base64
 import hashlib
+import asyncio
+import logging
+import aiomysql
 
 
 def build_huobi_sign(params, method, host_url, request_path, secret_key):
@@ -83,6 +86,54 @@ def http_post_ok_request(url, resource, params):
     params.clear()
     conn.close()
     return data
+
+
+@asyncio.coroutine
+def create_pool(loop, **kw):
+    logging.info('create database connection pool...')
+    global __pool
+    __pool = yield from aiomysql.create_pool(
+        host=kw.get('host', 'localhost'),
+        port=kw.get('port', 3306),
+        user=kw['root'],
+        password=kw['ab12'],
+        db=kw['autotrade_test'],
+        charset=kw.get('charset', 'utf8'),
+        autocommit=kw.get('autocommit', True),
+        maxsize=kw.get('maxsize', 10),
+        minsize=kw.get('minsize', 1),
+        loop=loop
+    )
+
+
+@asyncio.coroutine
+def select(sql, args, size=None):
+    logging.info(sql, args)
+    global __pool
+    with (yield from __pool) as conn:
+        cur = yield from conn.cursor(aiomysql.DictCursor)
+        yield from cur.execute(sql.replace('?', '%s'), args or ())
+        if size:
+            rs = yield from cur.fetchmany(size)
+        else:
+            rs = yield from cur.fetchall()
+        yield from cur.close()
+        logging.info('rows returned: %s' % len(rs))
+        return rs
+
+
+@asyncio.coroutine
+def execute(sql, args):
+    logging.info(sql)
+    with (yield from __pool) as conn:
+        try:
+            cur = yield from conn.cursor()
+            yield from cur.execute(sql.replace('?', '%s'), args)
+            affected = cur.rowcount
+            yield from cur.close()
+        except BaseException as e:
+            raise
+        return affected
 
 
 def http_get(url, params, add_to_headers=None):

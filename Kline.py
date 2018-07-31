@@ -6,10 +6,12 @@
 
 from OkSpotAPI import OKSpot
 from HuobiSpotAPI import HuobiSpot
+import Util
 
 
 class Kline:
     def __init__(self, exchange=0, amount=0, open=0.0, close=0.0, high=0.0, low=0.0, ts=0):
+        self.id = -1
         self.amount = amount
         self.open = open
         self.close = close
@@ -18,10 +20,13 @@ class Kline:
         self.ts = ts
         self.exchange = exchange
 
-    def save_to_db(self):
+    def insert_to_db(self):
         return
 
-    def get_from_db(self, ts=0):
+    def select_from_db(self, ts=0):
+        return
+
+    def update_to_db(self):
         return
 
 
@@ -30,10 +35,10 @@ class Klines:
         self.ok_klines = []
         self.huobi_klines = []
 
-    def batch_save_to_huobi_db(self):
+    def batch_insert_to_huobi_db(self):
         return
 
-    def batch_save_to_ok_db(self):
+    def batch_insert_to_ok_db(self):
         return
 
     def fetch_from_exchange(self):

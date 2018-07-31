@@ -4,9 +4,12 @@
 # @Author  : Steven
 # @QQ      : 83365885
 
+import Util
+
 
 class MultiDayLine:
     def __init__(self, five, ten, twenty, sixty, ts, exchange):
+        self.id = -1
         self.five_days_line = five
         self.ten_days_line = ten
         self.twenty_days_line = twenty
